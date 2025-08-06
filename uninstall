@@ -1,0 +1,18 @@
+#!/bin/bash
+echo "Removing Zelda sounds from Claude Code..."
+python3 -c "
+import json
+from pathlib import Path
+
+settings_path = Path.home() / '.claude' / 'settings.json'
+if settings_path.exists():
+    with open(settings_path) as f:
+        settings = json.load(f)
+    if 'hooks' in settings:
+        del settings['hooks']
+    with open(settings_path, 'w') as f:
+        json.dump(settings, f, indent=2)
+    print('✓ Hooks removed from settings')
+"
+echo "✓ Uninstall complete"
+echo "Note: Sound files remain in $(pwd) if you want to reinstall later"

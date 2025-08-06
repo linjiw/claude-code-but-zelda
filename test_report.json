@@ -1,0 +1,81 @@
+{
+  "timestamp": "2025-08-06T16:57:02.118508",
+  "summary": {
+    "total": 15,
+    "passed": 15,
+    "success_rate": 100.0
+  },
+  "tests": [
+    {
+      "test": "List_response",
+      "passed": true,
+      "time": 0.03702092170715332
+    },
+    {
+      "test": "Read_response",
+      "passed": true,
+      "time": 0.02714395523071289
+    },
+    {
+      "test": "LS_response",
+      "passed": true,
+      "time": 0.028520822525024414
+    },
+    {
+      "test": "Bash_response",
+      "passed": true,
+      "time": 0.030103206634521484
+    },
+    {
+      "test": "Bash_response",
+      "passed": true,
+      "time": 0.035804033279418945
+    },
+    {
+      "test": "Write_response",
+      "passed": true,
+      "time": 0.03614187240600586
+    },
+    {
+      "test": "Edit_response",
+      "passed": true,
+      "time": 0.03272080421447754
+    },
+    {
+      "test": "TodoWrite_response",
+      "passed": true,
+      "time": 0.02854299545288086
+    },
+    {
+      "test": "TodoWrite_response",
+      "passed": true,
+      "time": 0.03664088249206543
+    },
+    {
+      "test": "performance",
+      "passed": true,
+      "avg_time": 0.03617780208587647
+    },
+    {
+      "test": "concurrent",
+      "passed": true,
+      "time": 0.07060980796813965
+    },
+    {
+      "test": "event_PostToolUse",
+      "passed": true
+    },
+    {
+      "test": "event_PreToolUse",
+      "passed": true
+    },
+    {
+      "test": "event_Notification",
+      "passed": true
+    },
+    {
+      "test": "event_Stop",
+      "passed": true
+    }
+  ]
+}

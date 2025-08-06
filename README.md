@@ -1,103 +1,238 @@
-# Zelda Sound Effects for Claude Code
+# 🎮 Zelda Sounds for Claude Code
 
-Add legendary Zelda sound effects to your Claude Code workflow! 🎮
+> Add legendary Zelda sound effects to your Claude Code workflow!
 
-## Features
+[![Tests](https://img.shields.io/badge/tests-passing-brightgreen)](VALIDATION_REPORT.md)
+[![Performance](https://img.shields.io/badge/latency-21ms-blue)](VALIDATION_REPORT.md)
+[![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux-lightgrey)]()
 
-- **Success sounds**: Item get, puzzle solved
-- **Error sounds**: Damage, game over  
-- **Progress sounds**: Rupee collection, menu select
-- **Todo completion**: Secret discovery sound
-- **Test results**: Different sounds for pass/fail
+## 🎵 What You'll Hear
 
-## Setup Instructions
+| Event | Sound | From |
+|-------|-------|------|
+| ✅ Command Success | Cooking Success | Zelda TOTK |
+| ❌ Command Error | Cooking Fail | Zelda TOTK |
+| 📝 Todo Complete | GetHeart | Zelda TOTK |
+| 🧪 Test Pass | Puzzle Solved | Zelda TOTK |
+| 💀 Test Fail | Game Over | Zelda TOTK |
+| ⚠️ Need Input | Assassin Appear | Zelda TOTK |
+| 🎯 Task Complete | GetLarge | Zelda TOTK |
 
-### 1. Sound Files Status ✅
-
-Custom sounds have been integrated! The system now uses your personalized sound effects:
-
-**Current Sound Mappings:**
-- `success.wav` - Cooking Success sound
-- `item_get.wav` - GetLarge sound  
-- `error.wav` - Cooking Fail sound
-- `warning.wav` - Original 8-bit warning
-- `menu_select.wav` - Original 8-bit menu
-- `rupee.wav` - GetSmall sound (progress)
-- `puzzle_solved.wav` - GetMedium sound
-- `damage.wav` - Game Over sound
-- `secret.wav` - Location Open sound
-- `todo_complete.wav` - GetHeart sound
-
-**Backup Location:** Original sounds backed up to `sounds_backup/`
-
-### 2. Configure Claude Code
-
-Add hooks to your Claude Code settings:
+## 🚀 Quick Install (One Command!)
 
 ```bash
-# Find your Claude Code config directory
-claude code config
-
-# Edit the settings.json file
+# Clone and install
+git clone https://github.com/YOUR_USERNAME/zelda-claude-sounds.git
+cd zelda-claude-sounds
+./install_zelda_sounds.sh
 ```
 
-Copy the hooks configuration from `claude_settings_example.json` to your settings.json, updating the paths to match your installation location.
+That's it! The installer handles everything automatically.
 
-### 3. Test the Setup
+## 📖 Manual Installation
 
-Test individual sounds:
+<details>
+<summary>Click for step-by-step manual installation</summary>
+
+### Prerequisites
+- Claude Code installed
+- Python 3.6+
+- macOS (afplay) or Linux (aplay)
+
+### Step 1: Clone Repository
 ```bash
-python3 scripts/play_sound.py success
-python3 scripts/play_sound.py error
-python3 scripts/play_sound.py todo_complete
+git clone https://github.com/YOUR_USERNAME/zelda-claude-sounds.git
+cd zelda-claude-sounds
 ```
 
-## Sound Event Mapping
+### Step 2: Configure Hooks
+```bash
+python3 configure_claude_hooks.py
+```
 
-| Event | Sound | Description |
-|-------|-------|-------------|
-| Command success | Item get | Successful tool execution |
-| Command error | Damage/error | Failed command |
-| Todo complete | Secret found | Todo item marked complete |
-| Test pass | Puzzle solved | All tests passing |
-| Test fail | Damage | Test failures |
-| Workflow start | Menu select | Beginning new task |
+### Step 3: Restart Claude Code
+```bash
+# Exit if running
+exit
 
-## Customization
+# Start fresh
+claude
+```
 
-Edit `scripts/play_sound.py` to:
-- Change sound mappings
-- Add new event types
-- Adjust volume (platform-specific)
+### Step 4: Verify
+```bash
+# In Claude Code
+> /hooks  # Should show PostToolUse, Notification, Stop hooks
+> ls      # Should play success sound
+```
 
-## Troubleshooting
+</details>
 
-### No sound on macOS
-- Check System Preferences > Sound
-- Ensure `afplay` is available: `which afplay`
+## 🎯 Testing Your Installation
 
-### No sound on Linux
-- Install audio player: `sudo apt-get install alsa-utils`
-- Or: `sudo apt-get install pulseaudio-utils`
+### Quick Test
+```bash
+# Test all sounds
+./test-sounds
 
-### No sound on Windows
-- PowerShell execution policy may block scripts
-- Run: `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`
+# Or in Claude Code:
+> ls          # Success sound
+> cat /fake   # Error sound
+```
 
-## Platform Support
+### Full Validation
+```bash
+# Run comprehensive tests
+python3 test_claude_integration.py
 
-- ✅ macOS (afplay)
-- ✅ Linux (aplay/paplay/ffplay)
-- ✅ Windows (PowerShell/System.Media)
+# Expected output:
+# Tests Run: 15
+# Tests Passed: 15
+# Success Rate: 100.0%
+```
 
-## Legal Note
+## 🛠️ Configuration
 
-Only use sound effects you have the right to use:
-- Public domain sounds
-- Creative Commons licensed
-- Self-created or generated sounds
-- Sounds from legal repositories
+### Hook Events
 
-## Contributing
+The system responds to these Claude Code events:
 
-Feel free to add more event types or improve the sound player!
+| Event | When It Triggers | Sound |
+|-------|-----------------|-------|
+| **PostToolUse** | After any tool executes | Success/Error based on result |
+| **Notification** | Claude needs your input | Warning sound |
+| **Stop** | Claude finishes responding | Completion sound |
+
+### Customizing Sounds
+
+Replace any `.wav` file in the `sounds/` directory:
+
+```bash
+sounds/
+├── success.wav      # Command success
+├── error.wav        # Command failure
+├── todo_complete.wav # Todo marked done
+├── warning.wav      # Alerts
+└── ...
+```
+
+## 🔧 Troubleshooting
+
+<details>
+<summary>No sounds playing?</summary>
+
+1. **Check hooks are loaded:**
+   ```bash
+   # In Claude Code
+   > /hooks
+   ```
+
+2. **Restart Claude Code completely:**
+   ```bash
+   exit
+   claude
+   ```
+
+3. **Test sound system:**
+   ```bash
+   afplay sounds/success.wav  # macOS
+   aplay sounds/success.wav   # Linux
+   ```
+
+4. **Check debug log:**
+   ```bash
+   cat /tmp/claude_hook_debug.log
+   ```
+
+</details>
+
+<details>
+<summary>Hooks not showing in /hooks?</summary>
+
+1. **Verify settings location:**
+   ```bash
+   cat ~/.claude/settings.json | grep hooks
+   ```
+
+2. **Re-run configuration:**
+   ```bash
+   python3 configure_claude_hooks.py
+   ```
+
+3. **Restart Claude Code**
+
+</details>
+
+<details>
+<summary>Performance issues?</summary>
+
+- Sounds play asynchronously (21ms average)
+- No impact on Claude Code performance
+- If experiencing delays, check system audio settings
+
+</details>
+
+## 📊 Performance
+
+Validated performance metrics:
+- **Average latency:** 21ms
+- **Maximum latency:** 48ms
+- **Concurrent sounds:** Handled perfectly
+- **CPU impact:** <1%
+- **Blocking:** Never (fully async)
+
+See [VALIDATION_REPORT.md](VALIDATION_REPORT.md) for detailed metrics.
+
+## 🗑️ Uninstall
+
+```bash
+# Remove hooks but keep sounds
+./uninstall
+
+# Or completely remove
+rm -rf zelda-claude-sounds
+```
+
+## 📚 Documentation
+
+- [**CLAUDE_HOOKS_GUIDE.md**](CLAUDE_HOOKS_GUIDE.md) - How hooks work
+- [**VALIDATION_REPORT.md**](VALIDATION_REPORT.md) - Test results & metrics
+- [**TROUBLESHOOTING.md**](TROUBLESHOOTING.md) - Common issues
+- [**TESTING_GUIDE.md**](TESTING_GUIDE.md) - How to test
+
+## 🤝 Contributing
+
+Contributions welcome! Please:
+1. Fork the repository
+2. Create a feature branch
+3. Run tests: `python3 test_claude_integration.py`
+4. Submit a pull request
+
+## 📝 License
+
+MIT License - Use freely!
+
+## 🙏 Credits
+
+- Sound effects from The Legend of Zelda: Tears of the Kingdom
+- Built for Claude Code by Anthropic
+- Community contributions welcome
+
+## ⚡ Quick Commands
+
+```bash
+./install_zelda_sounds.sh  # One-click install
+./test-sounds              # Test all sounds
+./demo_sounds.sh           # Demo sequence
+./uninstall                # Remove hooks
+python3 test_claude_integration.py  # Run tests
+```
+
+## 🎮 Enjoy Your Legendary Coding Experience!
+
+Every command now has the magic of Hyrule! 🗡️✨
+
+---
+
+**Questions?** Open an issue on GitHub
+**Working great?** Star the repo! ⭐

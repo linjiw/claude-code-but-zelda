@@ -1,0 +1,4 @@
+#!/bin/bash
+echo "🎮 Testing Zelda Sounds..."
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+python3 "$DIR/test_interactive.sh" 2>/dev/null || "$DIR/demo_sounds.sh"
