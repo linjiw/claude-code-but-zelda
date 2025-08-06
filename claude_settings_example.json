@@ -1,0 +1,22 @@
+{
+  "hooks": {
+    "user-prompt-submit-hook": "/Users/linji/Downloads/zelda_claude/hooks/on_start.sh",
+    "assistant-message-done-hook": "/Users/linji/Downloads/zelda_claude/hooks/on_success.sh",
+    "tool-result-hook": {
+      "Bash": {
+        "success": "/Users/linji/Downloads/zelda_claude/hooks/on_success.sh",
+        "error": "/Users/linji/Downloads/zelda_claude/hooks/on_error.sh"
+      },
+      "TodoWrite": {
+        "success": "/Users/linji/Downloads/zelda_claude/hooks/on_todo_complete.sh"
+      },
+      "Edit": {
+        "success": "/Users/linji/Downloads/zelda_claude/hooks/on_success.sh",
+        "error": "/Users/linji/Downloads/zelda_claude/hooks/on_error.sh"
+      },
+      "Write": {
+        "success": "/Users/linji/Downloads/zelda_claude/hooks/on_success.sh"
+      }
+    }
+  }
+}

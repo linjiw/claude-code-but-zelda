@@ -1,0 +1,41 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.env
+
+# Backup directories
+sounds_backup/
+sounds_backup_original/
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~
+
+# Audio work files (keep only final WAV)
+*.aup
+*.aup3
+*.au
+
+# Keep custom sounds but not large uncompressed formats
+*.aiff
+*.flac
+
+# IDE
+.vscode/
+.idea/
+*.sublime-*
+
+# Logs
+*.log
