@@ -39,3 +39,16 @@ sounds_backup_original/
 
 # Logs
 *.log
+
+# User data and stats (these should be local to each user)
+~/.zelda_achievements.json
+~/.zelda_stats.json
+stats/
+user_data/
+
+# Audio source files (keep only converted WAV files)
+user-customized-sound/
+
+# Generated files that can be recreated
+sound_id_mapping.json
+claude_code_shopping_list.txt
