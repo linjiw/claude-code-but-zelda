@@ -1,238 +1,171 @@
-# 🎮 Zelda Sounds for Claude Code
+# 🎮 Zelda Claude Code
 
-> Add legendary Zelda sound effects to your Claude Code workflow!
+> Transform your coding experience into a Zelda adventure - with sounds, achievements, and stats!
 
-[![Tests](https://img.shields.io/badge/tests-passing-brightgreen)](VALIDATION_REPORT.md)
-[![Performance](https://img.shields.io/badge/latency-21ms-blue)](VALIDATION_REPORT.md)
-[![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux-lightgrey)]()
+[![Version](https://img.shields.io/badge/version-2.0-brightgreen)](.)
+[![Integration](https://img.shields.io/badge/integration-Claude%20Code-blue)](.)
+[![Sounds](https://img.shields.io/badge/sounds-25%2B-orange)](.)
 
-## 🎵 What You'll Hear
+## ✨ What is this?
 
-| Event | Sound | From |
-|-------|-------|------|
-| ✅ Command Success | Cooking Success | Zelda TOTK |
-| ❌ Command Error | Cooking Fail | Zelda TOTK |
-| 📝 Todo Complete | GetHeart | Zelda TOTK |
-| 🧪 Test Pass | Puzzle Solved | Zelda TOTK |
-| 💀 Test Fail | Game Over | Zelda TOTK |
-| ⚠️ Need Input | Assassin Appear | Zelda TOTK |
-| 🎯 Task Complete | GetLarge | Zelda TOTK |
+Zelda Claude Code makes coding feel like playing Zelda! Every command plays a sound, successful streaks earn combos, and you unlock achievements as you code. Everything works seamlessly inside Claude Code - no external tools needed!
 
-## 🚀 Quick Install (One Command!)
+## 🚀 Installation (30 seconds!)
 
 ```bash
-# Clone and install
-git clone https://github.com/YOUR_USERNAME/zelda-claude-sounds.git
-cd zelda-claude-sounds
-./install_zelda_sounds.sh
-```
+# Clone the repository
+git clone https://github.com/YOUR_USERNAME/zelda-claude-code.git
+cd zelda-claude-code
 
-That's it! The installer handles everything automatically.
+# Run the installer
+./install.sh
 
-## 📖 Manual Installation
-
-<details>
-<summary>Click for step-by-step manual installation</summary>
-
-### Prerequisites
-- Claude Code installed
-- Python 3.6+
-- macOS (afplay) or Linux (aplay)
-
-### Step 1: Clone Repository
-```bash
-git clone https://github.com/YOUR_USERNAME/zelda-claude-sounds.git
-cd zelda-claude-sounds
-```
-
-### Step 2: Configure Hooks
-```bash
-python3 configure_claude_hooks.py
-```
-
-### Step 3: Restart Claude Code
-```bash
-# Exit if running
+# Restart Claude Code
 exit
-
-# Start fresh
 claude
 ```
 
-### Step 4: Verify
-```bash
-# In Claude Code
-> /hooks  # Should show PostToolUse, Notification, Stop hooks
-> ls      # Should play success sound
+That's it! Everything is now integrated into Claude Code.
+
+## 🎮 How to Use
+
+**Everything is done inside Claude Code using `@zelda` commands:**
+
+```
+@zelda stats          # View your coding statistics
+@zelda achievements   # Check achievement progress  
+@zelda combo         # See current combo streak
+@zelda config        # View/change settings
+@zelda help          # Show all commands
 ```
 
-</details>
+### Examples
 
-## 🎯 Testing Your Installation
-
-### Quick Test
-```bash
-# Test all sounds
-./test-sounds
-
-# Or in Claude Code:
-> ls          # Success sound
-> cat /fake   # Error sound
+Check your stats anytime:
+```
+@zelda stats
 ```
 
-### Full Validation
-```bash
-# Run comprehensive tests
-python3 test_claude_integration.py
-
-# Expected output:
-# Tests Run: 15
-# Tests Passed: 15
-# Success Rate: 100.0%
+Adjust volume:
+```
+@zelda config volume 75
 ```
 
-## 🛠️ Configuration
-
-### Hook Events
-
-The system responds to these Claude Code events:
-
-| Event | When It Triggers | Sound |
-|-------|-----------------|-------|
-| **PostToolUse** | After any tool executes | Success/Error based on result |
-| **Notification** | Claude needs your input | Warning sound |
-| **Stop** | Claude finishes responding | Completion sound |
-
-### Customizing Sounds
-
-Replace any `.wav` file in the `sounds/` directory:
-
-```bash
-sounds/
-├── success.wav      # Command success
-├── error.wav        # Command failure
-├── todo_complete.wav # Todo marked done
-├── warning.wav      # Alerts
-└── ...
+Disable combo sounds:
+```
+@zelda config sounds.combo false
 ```
 
-## 🔧 Troubleshooting
+## 🎵 What You'll Hear
 
-<details>
-<summary>No sounds playing?</summary>
+| Event | Sound | When |
+|-------|-------|------|
+| ✅ Success | Cooking Success | Commands work |
+| ❌ Error | Cooking Fail | Commands fail |
+| 📝 Todo Complete | GetHeart | Marking todos done |
+| 🔥 Combo 3x | Item Small | 3 successes in a row |
+| 🔥 Combo 5x | Heart Get | 5 successes in a row |
+| 🔥 Combo 10x | Achievement | 10 successes in a row! |
+| 🏆 Achievement | Achievement | Unlocking achievements |
+| 🔍 Search | Discovery | Finding search results |
 
-1. **Check hooks are loaded:**
-   ```bash
-   # In Claude Code
-   > /hooks
-   ```
+## 🏆 Features
 
-2. **Restart Claude Code completely:**
-   ```bash
-   exit
-   claude
-   ```
+### 📊 **Statistics Tracking**
+- Total commands executed
+- Success rate percentage
+- Longest streak record
+- Favorite tools
+- Session tracking
 
-3. **Test sound system:**
-   ```bash
-   afplay sounds/success.wav  # macOS
-   aplay sounds/success.wav   # Linux
-   ```
+### ⚡ **Combo System**
+Build streaks of successful commands:
+- 🥉 Bronze (3 commands)
+- 🥈 Silver (5 commands)  
+- 🥇 Gold (10 commands)
+- 💎 Platinum (20 commands)
+- 🔥 Master (50 commands!)
 
-4. **Check debug log:**
-   ```bash
-   cat /tmp/claude_hook_debug.log
-   ```
+### 🎖️ **Achievements**
+Unlock 25+ achievements across categories:
+- **Milestones**: First command, 10, 50, 100, 500+ commands
+- **Combos**: Streak achievements
+- **Perfectionist**: Error-free sessions
+- **Explorer**: Using different tools
 
-</details>
+### ⚙️ **Customization**
+Configure everything without leaving Claude Code:
+- Sound volume
+- Enable/disable features
+- Notification preferences
 
-<details>
-<summary>Hooks not showing in /hooks?</summary>
+## 📁 Simple Structure
 
-1. **Verify settings location:**
-   ```bash
-   cat ~/.claude/settings.json | grep hooks
-   ```
-
-2. **Re-run configuration:**
-   ```bash
-   python3 configure_claude_hooks.py
-   ```
-
-3. **Restart Claude Code**
-
-</details>
-
-<details>
-<summary>Performance issues?</summary>
-
-- Sounds play asynchronously (21ms average)
-- No impact on Claude Code performance
-- If experiencing delays, check system audio settings
-
-</details>
-
-## 📊 Performance
-
-Validated performance metrics:
-- **Average latency:** 21ms
-- **Maximum latency:** 48ms
-- **Concurrent sounds:** Handled perfectly
-- **CPU impact:** <1%
-- **Blocking:** Never (fully async)
-
-See [VALIDATION_REPORT.md](VALIDATION_REPORT.md) for detailed metrics.
-
-## 🗑️ Uninstall
-
-```bash
-# Remove hooks but keep sounds
-./uninstall
-
-# Or completely remove
-rm -rf zelda-claude-sounds
+```
+zelda-claude-code/
+├── install.sh           # One-click installer
+├── zelda_core.py       # All logic in one file
+├── hooks/
+│   └── zelda_hook.py   # Claude Code integration
+└── sounds/             # Your Zelda sounds
 ```
 
-## 📚 Documentation
+## 🤔 FAQ
 
-- [**CLAUDE_HOOKS_GUIDE.md**](CLAUDE_HOOKS_GUIDE.md) - How hooks work
-- [**VALIDATION_REPORT.md**](VALIDATION_REPORT.md) - Test results & metrics
-- [**TROUBLESHOOTING.md**](TROUBLESHOOTING.md) - Common issues
-- [**TESTING_GUIDE.md**](TESTING_GUIDE.md) - How to test
+**Q: Do I need to run Python scripts?**
+A: No! Everything is done through `@zelda` commands in Claude Code.
+
+**Q: How do I check my stats?**
+A: Type `@zelda stats` in Claude Code.
+
+**Q: Can I disable sounds?**
+A: Yes! Type `@zelda config sounds.enabled false`
+
+**Q: Where is data stored?**
+A: In `~/.zelda/` (hidden folder in your home directory)
+
+**Q: How do I update?**
+A: Pull the latest changes and run `./install.sh` again
+
+## 🎯 Philosophy
+
+Our goal is **complete integration** with Claude Code. You should never need to:
+- Leave Claude Code to check stats
+- Run Python scripts manually
+- Edit JSON files
+- Use external tools
+
+Everything happens naturally as you code!
+
+## 🛠️ Troubleshooting
+
+If sounds aren't playing:
+1. Make sure you restarted Claude Code after installation
+2. Check volume: `@zelda config volume 100`
+3. Verify sounds are enabled: `@zelda config sounds.enabled true`
+
+If commands don't work:
+1. Make sure you're using the `@zelda` prefix
+2. Restart Claude Code
+3. Re-run `./install.sh`
 
 ## 🤝 Contributing
 
-Contributions welcome! Please:
-1. Fork the repository
-2. Create a feature branch
-3. Run tests: `python3 test_claude_integration.py`
-4. Submit a pull request
+Contributions welcome! The codebase is now simplified:
+- `zelda_core.py` - All logic
+- `hooks/zelda_hook.py` - Claude Code integration
+- `sounds/` - Sound files
 
-## 📝 License
+## 📜 License
 
-MIT License - Use freely!
+MIT - Use freely!
 
 ## 🙏 Credits
 
-- Sound effects from The Legend of Zelda: Tears of the Kingdom
+- Sound effects from The Legend of Zelda series
 - Built for Claude Code by Anthropic
-- Community contributions welcome
-
-## ⚡ Quick Commands
-
-```bash
-./install_zelda_sounds.sh  # One-click install
-./test-sounds              # Test all sounds
-./demo_sounds.sh           # Demo sequence
-./uninstall                # Remove hooks
-python3 test_claude_integration.py  # Run tests
-```
-
-## 🎮 Enjoy Your Legendary Coding Experience!
-
-Every command now has the magic of Hyrule! 🗡️✨
+- Inspired by the desire to make coding more fun!
 
 ---
 
-**Questions?** Open an issue on GitHub
-**Working great?** Star the repo! ⭐
+**Ready to transform your coding into an adventure?** Install now and may the Triforce guide your code! 🗡️✨
