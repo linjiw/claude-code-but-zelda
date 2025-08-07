@@ -15,8 +15,8 @@ Zelda Claude Code gamifies your coding experience! Every command plays iconic Ze
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/zelda-claude-code.git
-cd zelda-claude-code
+git clone https://github.com/linjiw/claude-code-but-zelda.git
+cd claude-code-but-zelda
 
 # Run the one-click installer
 ./install.sh
