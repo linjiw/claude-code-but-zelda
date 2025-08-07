@@ -18,9 +18,8 @@ python3 scripts/play_sound.py success  # Test individual sound (success/error/to
 
 ### Setup & Configuration
 ```bash
-./install.sh                          # Main installer (checks dependencies, sets up sounds)
-./setup_claude_hooks.sh               # Configure Claude Code hooks
-python3 setup_claude_hooks_correct.py # Alternative Python-based setup
+./install_zelda_sounds.sh             # One-click installer with verification
+python3 configure_claude_hooks.py     # Configure Claude Code hooks
 ```
 
 ### Sound Management
@@ -36,6 +35,27 @@ python3 setup_all_custom_sounds.py   # Convert MP3s to WAV format
 2. Hook script receives JSON via stdin with tool details
 3. Sound is determined based on tool type and status
 4. Async playback via platform-specific command (afplay/aplay/PowerShell)
+
+### Project Structure
+```
+zelda_claude/
+├── hooks/
+│   └── play_sound_hook.py      # Main PostToolUse hook handler
+├── scripts/
+│   ├── play_sound.py           # Sync sound player for testing
+│   └── play_sound_async.py     # Async sound player for hooks
+├── sounds/                      # Active sound files (WAV format)
+├── sounds_backup/
+│   ├── generated/              # Generated/basic sounds
+│   └── custom/                 # High-quality custom sounds
+├── user-customized-sound/      # MP3 files for customization
+├── docs/                        # Documentation files
+└── Main scripts:
+    ├── install_zelda_sounds.sh # One-click installer
+    ├── configure_claude_hooks.py # Hook configuration
+    ├── test_suite.py           # Comprehensive testing
+    └── demo_sounds.sh          # Sound demonstration
+```
 
 ### Key Components
 - **hooks/play_sound_hook.py**: Main hook that processes Claude Code JSON events
@@ -63,5 +83,5 @@ python3 setup_all_custom_sounds.py   # Convert MP3s to WAV format
 
 ### Important Files
 - **claude_settings_example.json**: Example hooks configuration for ~/.claude/settings.json
-- **sounds_backup/**: Original sounds preserved here when custom sounds are applied
-- **user-customized-sound/**: MP3 files for custom sound replacements
+- **SOUND_SOURCES.md**: Legal sources and recommendations for sound files
+- **generate_zelda_style_sounds.py**: Generate legal 8-bit style sounds
