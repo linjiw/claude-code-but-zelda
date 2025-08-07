@@ -286,7 +286,19 @@ class ZeldaManager:
     
     # Achievement Management
     def _load_achievements(self) -> AchievementProgress:
-        """Load achievement progress"""
+        """Load achievement progress with caching support"""
+        # Try to use optimized file I/O if available
+        try:
+            from performance_optimizations import get_optimizations
+            opts = get_optimizations()
+            if opts and "file_io" in opts and opts["file_io"] is not None:
+                data = opts["file_io"].read_json_cached(ACHIEVEMENTS_FILE)
+                if data:
+                    return AchievementProgress(**data)
+        except (ImportError, AttributeError, KeyError):
+            pass
+        
+        # Fallback to standard file I/O
         if ACHIEVEMENTS_FILE.exists():
             try:
                 with open(ACHIEVEMENTS_FILE, 'r') as f:
@@ -297,7 +309,18 @@ class ZeldaManager:
         return AchievementProgress()
     
     def save_achievements(self):
-        """Save achievement progress"""
+        """Save achievement progress with async support"""
+        # Try to use optimized async file I/O if available
+        try:
+            from performance_optimizations import get_optimizations
+            opts = get_optimizations()
+            if opts and "file_io" in opts and opts["file_io"] is not None:
+                opts["file_io"].write_json_async(ACHIEVEMENTS_FILE, asdict(self.achievement_progress))
+                return
+        except (ImportError, AttributeError, KeyError):
+            pass
+        
+        # Fallback to standard file I/O
         with open(ACHIEVEMENTS_FILE, 'w') as f:
             json.dump(asdict(self.achievement_progress), f, indent=2)
     

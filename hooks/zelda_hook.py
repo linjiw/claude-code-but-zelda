@@ -2,17 +2,34 @@
 """
 Unified Zelda Hook for Claude Code
 Handles all Zelda features: sounds, stats, combos, achievements, and commands
+With performance optimizations for faster response times
 """
 
 import json
 import sys
 import subprocess
+import time
 from pathlib import Path
 
-# Add parent directory to path for zelda_core import
+# Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from zelda_core import get_manager
+
+# Performance optimizations (lazy loaded)
+_optimizations = None
+
+def get_optimizations():
+    """Lazy load performance optimizations"""
+    global _optimizations
+    if _optimizations is None:
+        try:
+            from performance_optimizations import initialize_optimizations
+            _optimizations = initialize_optimizations(SOUNDS_DIR)
+        except ImportError:
+            # Fallback if optimizations not available
+            _optimizations = {}
+    return _optimizations
 
 # Get the sounds directory
 SOUNDS_DIR = Path(__file__).parent.parent / "sounds"
@@ -48,9 +65,20 @@ HOOK_EVENT_SOUNDS = {
 manager = get_manager()
 
 def play_sound_async(sound_file):
-    """Play a sound file asynchronously"""
-    sound_path = SOUNDS_DIR / sound_file
-    if sound_path.exists() and manager.config["sounds"]["enabled"]:
+    """Play a sound file asynchronously with caching support"""
+    opts = get_optimizations()
+    
+    # Use cached sound path if available
+    if "sound_cache" in opts:
+        sound_path = opts["sound_cache"].get_sound_path_or_cache(sound_file)
+        if not sound_path:
+            return
+    else:
+        sound_path = SOUNDS_DIR / sound_file
+        if not sound_path.exists():
+            return
+    
+    if manager.config["sounds"]["enabled"]:
         volume = manager.config.get("volume", 100) / 100.0
         # Note: afplay doesn't support volume, but we keep the structure for future
         subprocess.Popen(
@@ -118,7 +146,18 @@ def handle_user_prompt(prompt):
     sys.exit(0)
 
 def handle_tool_execution(tool_name, response):
-    """Handle tool execution events"""
+    """Handle tool execution events with debouncing"""
+    opts = get_optimizations()
+    
+    # Check debouncer if available
+    if "debouncer" in opts:
+        if not opts["debouncer"].should_process(tool_name):
+            # Skip if command was executed too recently
+            return
+    
+    # Performance monitoring start
+    start_time = time.time() if "monitor" in opts else None
+    
     # Determine success
     is_success = determine_tool_success(tool_name, response)
     
@@ -131,6 +170,11 @@ def handle_tool_execution(tool_name, response):
     # Play all sounds
     all_sounds = [tool_sound] + additional_sounds
     play_multiple_sounds(all_sounds)
+    
+    # Record performance metrics
+    if start_time and "monitor" in opts:
+        duration_ms = (time.time() - start_time) * 1000
+        opts["monitor"].record_timing("hook_execution_times", duration_ms)
 
 def handle_session_start(session_id):
     """Handle session start"""
