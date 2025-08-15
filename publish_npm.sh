@@ -42,7 +42,7 @@ fi
 
 # Run tests
 echo -e "\n${YELLOW}Running tests...${NC}"
-python3 test_suite.py || {
+python3 test_npm_ready.py || {
     echo -e "${YELLOW}⚠️  Some tests failed${NC}"
     read -p "Continue anyway? (y/N) " -n 1 -r
     echo
