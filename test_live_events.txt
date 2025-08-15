@@ -1,0 +1,2 @@
+This is a test file for verifying Zelda Claude Code hooks work perfectly.
+When I create this file, it should trigger a sound event!

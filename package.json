@@ -1,6 +1,6 @@
 {
   "name": "zelda-claude-code",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "description": "Transform your Claude Code experience into an epic Zelda adventure with sounds, achievements, and combos!",
   "main": "lib/index.js",
   "bin": {
@@ -52,11 +52,15 @@
     "zelda_core.py",
     "test_zelda_system.py",
     "test_integration.py",
+    "test_suite.py",
     "demo_sounds.sh",
     "install.sh",
+    "universal_installer.py",
+    "verify_and_fix_installation.py",
     "postinstall.js",
     "README.md",
-    "CLAUDE.md"
+    "CLAUDE.md",
+    "CLAUDE_CODE_COMPLIANCE_REPORT.md"
   ],
   "dependencies": {
     "chalk": "^4.1.2",

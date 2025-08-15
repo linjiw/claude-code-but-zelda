@@ -3,7 +3,7 @@
 > Transform your coding experience into an epic Zelda adventure with sounds, achievements, combos, and real-time stats!
 
 [![npm version](https://badge.fury.io/js/zelda-claude-code.svg)](https://www.npmjs.com/package/zelda-claude-code)
-[![Version](https://img.shields.io/badge/version-2.1.0-brightgreen)](.)
+[![Version](https://img.shields.io/badge/version-3.0.0-brightgreen)](.)
 [![Integration](https://img.shields.io/badge/integration-Claude%20Code-blue)](.)
 [![Sounds](https://img.shields.io/badge/sounds-25%2B-orange)](.)
 [![Achievements](https://img.shields.io/badge/achievements-11%2B-yellow)](.)
@@ -19,13 +19,15 @@ Zelda Claude Code gamifies your coding experience! Every command plays iconic Ze
 ### Method 1: NPM (Recommended) - 10 seconds!
 
 ```bash
-# Install globally via npm
-npm install -g zelda-claude-code
+# Install globally via npm (v3.0.0 - spec compliant!)
+npm install -g zelda-claude-code@latest
 
 # IMPORTANT: Restart Claude Code
 exit
 # Start Claude Code again
 ```
+
+✅ **Works on all platforms: macOS, Linux, Windows, WSL**
 
 ### Method 2: From Source
 
@@ -34,7 +36,9 @@ exit
 git clone https://github.com/linjiw/claude-code-but-zelda.git
 cd claude-code-but-zelda
 
-# Run the one-click installer
+# Run the universal installer (NEW!)
+python3 universal_installer.py
+# Or use the classic installer
 ./install.sh
 
 # IMPORTANT: Restart Claude Code
@@ -42,11 +46,31 @@ exit
 # Start Claude Code again
 ```
 
+### Verify Installation
+
+```bash
+# Check everything is working
+python3 verify_and_fix_installation.py
+
+# Test the sounds
+./demo_sounds.sh
+```
+
 **That's it!** The installer handles everything automatically. ✨
 
-## ⚡ Performance Optimizations (v2.1)
+## 🎯 Version 3.0.0 - Full Claude Code Compliance
 
-**NEW:** Blazing fast performance with 80-98% improvements!
+**NEW:** 100% compliant with official Claude Code documentation!
+
+- **Universal Installer**: Works on any system, any condition
+- **Spec-Compliant Hooks**: Follows official Claude Code hook specification
+- **Self-Healing Installation**: Auto-fixes configuration issues
+- **Cross-Platform Support**: macOS, Linux, Windows, WSL
+- **Zero Breaking Changes**: Backward compatible with all features
+
+## ⚡ Performance Optimizations
+
+**Blazing fast performance with 80-98% improvements!**
 
 - **Sound Caching**: Preloaded sounds with 90% cache hit rate
 - **Smart Debouncing**: 97.5% reduction in redundant operations  
