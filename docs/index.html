@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zelda Claude Code - Transform Your Coding Into An Epic Adventure</title>
+    <meta name="description" content="Turn your Claude Code experience into a Zelda adventure with sounds, achievements, combos, and real-time stats!">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:title" content="Zelda Claude Code">
+    <meta property="og:description" content="Transform your coding into an epic Zelda adventure!">
+    <meta property="og:image" content="https://linjiw.github.io/claude-code-but-zelda/assets/images/hero.png">
+    <meta property="og:url" content="https://linjiw.github.io/claude-code-but-zelda">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="triforce"></div>
+        <div class="sparkles"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <span class="triforce-icon">▲</span>
+                Zelda Claude Code
+            </div>
+            <div class="nav-links">
+                <a href="#demo" class="nav-link">Demo</a>
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#install" class="nav-link">Install</a>
+                <a href="https://github.com/linjiw/claude-code-but-zelda" class="nav-link" target="_blank">GitHub</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1 class="hero-title">
+                <span class="pixel-text">Zelda</span>
+                <span class="gradient-text">Claude Code</span>
+            </h1>
+            <p class="hero-subtitle">
+                Transform your coding experience into an epic adventure with sounds, achievements, and real-time stats!
+            </p>
+            <div class="hero-badges">
+                <img src="https://badge.fury.io/js/zelda-claude-code.svg" alt="npm version">
+                <img src="https://img.shields.io/badge/sounds-25%2B-orange" alt="25+ Sounds">
+                <img src="https://img.shields.io/badge/achievements-11%2B-yellow" alt="11+ Achievements">
+            </div>
+            <div class="hero-actions">
+                <button class="btn btn-primary" onclick="scrollToSection('install')">
+                    <span class="btn-icon">⚔️</span>
+                    Get Started
+                </button>
+                <button class="btn btn-secondary" onclick="scrollToSection('demo')">
+                    <span class="btn-icon">🎮</span>
+                    Try Demo
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Demo Section -->
+    <section id="demo" class="demo-section">
+        <div class="container">
+            <h2 class="section-title">
+                <span class="pixel-text">Interactive</span> Sound Demo
+            </h2>
+            <p class="section-subtitle">Click any button to hear the actual sounds from Zelda Claude Code!</p>
+            
+            <div class="sound-grid">
+                <!-- Success Sounds -->
+                <div class="sound-category">
+                    <h3 class="category-title">✅ Success Events</h3>
+                    <div class="sound-buttons">
+                        <button class="sound-btn success" data-sound="success">
+                            <span class="sound-icon">⚔️</span>
+                            <span class="sound-name">Success</span>
+                            <span class="sound-desc">Command succeeds</span>
+                        </button>
+                        <button class="sound-btn success" data-sound="puzzle_solved">
+                            <span class="sound-icon">🧩</span>
+                            <span class="sound-name">Puzzle Solved</span>
+                            <span class="sound-desc">Complex task done</span>
+                        </button>
+                        <button class="sound-btn success" data-sound="test_pass">
+                            <span class="sound-icon">✓</span>
+                            <span class="sound-name">Test Pass</span>
+                            <span class="sound-desc">All tests green</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Error Sounds -->
+                <div class="sound-category">
+                    <h3 class="category-title">❌ Error Events</h3>
+                    <div class="sound-buttons">
+                        <button class="sound-btn error" data-sound="error">
+                            <span class="sound-icon">💥</span>
+                            <span class="sound-name">Error</span>
+                            <span class="sound-desc">Command fails</span>
+                        </button>
+                        <button class="sound-btn error" data-sound="damage">
+                            <span class="sound-icon">💔</span>
+                            <span class="sound-name">Damage</span>
+                            <span class="sound-desc">Critical error</span>
+                        </button>
+                        <button class="sound-btn error" data-sound="game_over">
+                            <span class="sound-icon">☠️</span>
+                            <span class="sound-name">Game Over</span>
+                            <span class="sound-desc">Session crash</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Achievement Sounds -->
+                <div class="sound-category">
+                    <h3 class="category-title">🏆 Achievements</h3>
+                    <div class="sound-buttons">
+                        <button class="sound-btn achievement" data-sound="achievement">
+                            <span class="sound-icon">🏆</span>
+                            <span class="sound-name">Achievement</span>
+                            <span class="sound-desc">Unlock new badge</span>
+                        </button>
+                        <button class="sound-btn achievement" data-sound="item_get">
+                            <span class="sound-icon">💎</span>
+                            <span class="sound-name">Item Get</span>
+                            <span class="sound-desc">Major milestone</span>
+                        </button>
+                        <button class="sound-btn achievement" data-sound="secret">
+                            <span class="sound-icon">🗝️</span>
+                            <span class="sound-name">Secret</span>
+                            <span class="sound-desc">Hidden feature</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Combo Sounds -->
+                <div class="sound-category">
+                    <h3 class="category-title">🔥 Combo Streaks</h3>
+                    <div class="sound-buttons">
+                        <button class="sound-btn combo" data-sound="rupee">
+                            <span class="sound-icon">💚</span>
+                            <span class="sound-name">Rupee</span>
+                            <span class="sound-desc">3x combo</span>
+                        </button>
+                        <button class="sound-btn combo" data-sound="heart_get">
+                            <span class="sound-icon">❤️</span>
+                            <span class="sound-name">Heart Get</span>
+                            <span class="sound-desc">5x combo</span>
+                        </button>
+                        <button class="sound-btn combo" data-sound="shrine_complete">
+                            <span class="sound-icon">⛩️</span>
+                            <span class="sound-name">Shrine</span>
+                            <span class="sound-desc">10x combo</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Task Sounds -->
+                <div class="sound-category">
+                    <h3 class="category-title">📝 Task Events</h3>
+                    <div class="sound-buttons">
+                        <button class="sound-btn task" data-sound="todo_complete">
+                            <span class="sound-icon">✅</span>
+                            <span class="sound-name">Todo Done</span>
+                            <span class="sound-desc">Task completed</span>
+                        </button>
+                        <button class="sound-btn task" data-sound="file_create">
+                            <span class="sound-icon">📄</span>
+                            <span class="sound-name">File Create</span>
+                            <span class="sound-desc">New file</span>
+                        </button>
+                        <button class="sound-btn task" data-sound="search_found">
+                            <span class="sound-icon">🔍</span>
+                            <span class="sound-name">Search Found</span>
+                            <span class="sound-desc">Results found</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Session Sounds -->
+                <div class="sound-category">
+                    <h3 class="category-title">🌟 Session Events</h3>
+                    <div class="sound-buttons">
+                        <button class="sound-btn session" data-sound="session_start">
+                            <span class="sound-icon">🌅</span>
+                            <span class="sound-name">Session Start</span>
+                            <span class="sound-desc">Begin coding</span>
+                        </button>
+                        <button class="sound-btn session" data-sound="session_night">
+                            <span class="sound-icon">🌙</span>
+                            <span class="sound-name">Session End</span>
+                            <span class="sound-desc">End coding</span>
+                        </button>
+                        <button class="sound-btn session" data-sound="notification">
+                            <span class="sound-icon">🔔</span>
+                            <span class="sound-name">Notification</span>
+                            <span class="sound-desc">Alert sound</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Live Terminal Demo -->
+            <div class="terminal-demo">
+                <h3 class="terminal-title">Live Simulation</h3>
+                <div class="terminal">
+                    <div class="terminal-header">
+                        <span class="terminal-dot red"></span>
+                        <span class="terminal-dot yellow"></span>
+                        <span class="terminal-dot green"></span>
+                        <span class="terminal-text">Claude Code Terminal</span>
+                    </div>
+                    <div class="terminal-body" id="terminal-output">
+                        <div class="terminal-line">$ claude code</div>
+                        <div class="terminal-line">🎮 Zelda Claude Code v2.1.0 loaded!</div>
+                        <div class="terminal-line">Type commands to see sound effects...</div>
+                    </div>
+                    <div class="terminal-input">
+                        <span class="terminal-prompt">$</span>
+                        <input type="text" id="terminal-command" placeholder="Try: npm test, git commit, @zelda stats">
+                    </div>
+                </div>
+                <div class="stats-display">
+                    <div class="stat-item">
+                        <span class="stat-label">Commands</span>
+                        <span class="stat-value" id="stat-commands">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Success Rate</span>
+                        <span class="stat-value" id="stat-success">0%</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Current Combo</span>
+                        <span class="stat-value combo-display" id="stat-combo">0x</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Achievements</span>
+                        <span class="stat-value" id="stat-achievements">0/11</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section">
+        <div class="container">
+            <h2 class="section-title">
+                <span class="pixel-text">Epic</span> Features
+            </h2>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎵</div>
+                    <h3 class="feature-title">25+ Zelda Sounds</h3>
+                    <p class="feature-desc">Every action plays iconic sounds from the Zelda universe</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🏆</div>
+                    <h3 class="feature-title">Achievement System</h3>
+                    <p class="feature-desc">Unlock 11+ achievements as you master your coding skills</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔥</div>
+                    <h3 class="feature-title">Combo Streaks</h3>
+                    <p class="feature-desc">Build epic combos with consecutive successful commands</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3 class="feature-title">Real-time Stats</h3>
+                    <p class="feature-desc">Track your coding progress with detailed statistics</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3 class="feature-title">Zero Latency</h3>
+                    <p class="feature-desc">Optimized for instant sound playback with no delays</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🎮</div>
+                    <h3 class="feature-title">Seamless Integration</h3>
+                    <p class="feature-desc">Works directly inside Claude Code - no external tools needed</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Installation Section -->
+    <section id="install" class="install-section">
+        <div class="container">
+            <h2 class="section-title">
+                <span class="pixel-text">Quick</span> Installation
+            </h2>
+            
+            <div class="install-methods">
+                <div class="install-card recommended">
+                    <div class="install-badge">Recommended</div>
+                    <h3 class="install-title">📦 Install via NPM</h3>
+                    <div class="code-block">
+                        <code>npm install -g zelda-claude-code</code>
+                        <button class="copy-btn" onclick="copyToClipboard('npm install -g zelda-claude-code')">📋 Copy</button>
+                    </div>
+                    <p class="install-time">⏱️ 10 seconds</p>
+                </div>
+                
+                <div class="install-card">
+                    <h3 class="install-title">🔧 Install from Source</h3>
+                    <div class="code-block">
+                        <code>git clone https://github.com/linjiw/claude-code-but-zelda.git
+cd claude-code-but-zelda
+./install.sh</code>
+                        <button class="copy-btn" onclick="copyToClipboard('git clone https://github.com/linjiw/claude-code-but-zelda.git\ncd claude-code-but-zelda\n./install.sh')">📋 Copy</button>
+                    </div>
+                    <p class="install-time">⏱️ 30 seconds</p>
+                </div>
+            </div>
+            
+            <div class="install-note">
+                <p>⚠️ <strong>Important:</strong> Restart Claude Code after installation!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2 class="cta-title">Ready to Level Up Your Coding?</h2>
+            <p class="cta-subtitle">Join thousands of developers who've transformed their Claude Code experience!</p>
+            <div class="cta-actions">
+                <a href="https://www.npmjs.com/package/zelda-claude-code" class="btn btn-primary" target="_blank">
+                    <span class="btn-icon">📦</span>
+                    View on NPM
+                </a>
+                <a href="https://github.com/linjiw/claude-code-but-zelda" class="btn btn-secondary" target="_blank">
+                    <span class="btn-icon">⭐</span>
+                    Star on GitHub
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p class="footer-text">
+                Made with ❤️ by <a href="https://github.com/linjiw" target="_blank">linjiw</a>
+            </p>
+            <p class="footer-note">
+                Zelda is a trademark of Nintendo. Please obtain sounds legally.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Audio Elements -->
+    <audio id="audio-player" preload="auto"></audio>
+
+    <!-- Scripts -->
+    <script src="assets/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Local Test - Zelda Claude Code</title>
+    <style>
+        body {
+            background: #0f172a;
+            color: #f1f5f9;
+            font-family: system-ui;
+            padding: 2rem;
+        }
+        .sound-btn {
+            background: #1e293b;
+            border: 1px solid #334155;
+            color: white;
+            padding: 1rem;
+            margin: 0.5rem;
+            cursor: pointer;
+            border-radius: 0.5rem;
+        }
+        .sound-btn:hover {
+            background: #334155;
+        }
+    </style>
+</head>
+<body>
+    <h1>Local Sound Test</h1>
+    <p>Test the sounds locally before deploying:</p>
+    
+    <button class="sound-btn" onclick="playLocalSound('success.wav')">Success Sound</button>
+    <button class="sound-btn" onclick="playLocalSound('error.wav')">Error Sound</button>
+    <button class="sound-btn" onclick="playLocalSound('achievement.wav')">Achievement Sound</button>
+    <button class="sound-btn" onclick="playLocalSound('rupee.wav')">Rupee Sound</button>
+    
+    <audio id="audio" preload="auto"></audio>
+    
+    <script>
+        function playLocalSound(file) {
+            const audio = document.getElementById('audio');
+            audio.src = 'sounds/' + file;
+            audio.play().then(() => {
+                console.log('Playing:', file);
+            }).catch(err => {
+                console.error('Error playing:', err);
+                alert('Error playing sound. Check console.');
+            });
+        }
+    </script>
+</body>
+</html>

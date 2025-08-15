@@ -1,0 +1,67 @@
+{
+  "name": "zelda-claude-code",
+  "version": "2.1.0",
+  "description": "Transform your Claude Code experience into an epic Zelda adventure with sounds, achievements, and combos!",
+  "main": "lib/index.js",
+  "bin": {
+    "zelda-claude": "./bin/zelda-claude.js"
+  },
+  "scripts": {
+    "postinstall": "node postinstall.js",
+    "test": "python3 test_zelda_system.py",
+    "demo": "./demo_sounds.sh"
+  },
+  "keywords": [
+    "claude",
+    "claude-code",
+    "zelda",
+    "sounds",
+    "gamification",
+    "developer-tools",
+    "cli",
+    "coding",
+    "productivity"
+  ],
+  "author": {
+    "name": "linjiw",
+    "url": "https://github.com/linjiw"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/linjiw/claude-code-but-zelda.git"
+  },
+  "bugs": {
+    "url": "https://github.com/linjiw/claude-code-but-zelda/issues"
+  },
+  "homepage": "https://github.com/linjiw/claude-code-but-zelda#readme",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "os": [
+    "darwin",
+    "linux",
+    "win32"
+  ],
+  "files": [
+    "bin/",
+    "lib/",
+    "hooks/",
+    "scripts/",
+    "sounds/",
+    "zelda_core.py",
+    "test_zelda_system.py",
+    "test_integration.py",
+    "demo_sounds.sh",
+    "install.sh",
+    "postinstall.js",
+    "README.md",
+    "CLAUDE.md"
+  ],
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "commander": "^9.0.0",
+    "fs-extra": "^11.0.0",
+    "ora": "^5.4.1"
+  }
+}

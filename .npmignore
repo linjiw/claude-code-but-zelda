@@ -1,0 +1,44 @@
+# Development files
+.git/
+.gitignore
+.DS_Store
+__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Test files
+test_*.py
+*_test.py
+test_suite.py
+
+# Documentation files not needed in package
+NPM_README.md
+PERFORMANCE_PLAN.md
+twitter_post.md
+docs/
+
+# Development scripts
+create_demo.py
+quick_demo.sh
+
+# Backup directories
+sounds_backup/
+user-customized-sound/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Claude-specific development files
+.claude/
+
+# Keep only essential files for npm package

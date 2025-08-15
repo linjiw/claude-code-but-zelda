@@ -2,16 +2,32 @@
 
 > Transform your coding experience into an epic Zelda adventure with sounds, achievements, combos, and real-time stats!
 
-[![Version](https://img.shields.io/badge/version-2.0-brightgreen)](.)
+[![npm version](https://badge.fury.io/js/zelda-claude-code.svg)](https://www.npmjs.com/package/zelda-claude-code)
+[![Version](https://img.shields.io/badge/version-2.1.0-brightgreen)](.)
 [![Integration](https://img.shields.io/badge/integration-Claude%20Code-blue)](.)
 [![Sounds](https://img.shields.io/badge/sounds-25%2B-orange)](.)
 [![Achievements](https://img.shields.io/badge/achievements-11%2B-yellow)](.)
+
+🎮 **[Try the Live Demo](https://linjiw.github.io/claude-code-but-zelda)** | 📦 **[NPM Package](https://www.npmjs.com/package/zelda-claude-code)**
 
 ## ✨ What is this?
 
 Zelda Claude Code gamifies your coding experience! Every command plays iconic Zelda sounds, successful streaks build epic combos, and you unlock achievements as you master your craft. Everything works seamlessly **inside** Claude Code - no external tools, no manual scripts, just pure integrated magic!
 
-## 🚀 Installation (30 seconds!)
+## 🚀 Installation
+
+### Method 1: NPM (Recommended) - 10 seconds!
+
+```bash
+# Install globally via npm
+npm install -g zelda-claude-code
+
+# IMPORTANT: Restart Claude Code
+exit
+# Start Claude Code again
+```
+
+### Method 2: From Source
 
 ```bash
 # Clone the repository
