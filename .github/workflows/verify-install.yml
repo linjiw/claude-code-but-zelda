@@ -64,6 +64,7 @@ jobs:
         zelda-claude --help || true
 
     - name: Test hook execution
+      shell: bash
       run: |
         # Create a test script to verify hooks work
         cat > test_hook.py << 'EOF'
@@ -72,6 +73,12 @@ jobs:
         import sys
         import os
         from pathlib import Path
+        
+        # Set UTF-8 encoding for Windows
+        if sys.platform == "win32":
+            import codecs
+            sys.stdout = codecs.getwriter('utf-8')(sys.stdout.buffer, 'strict')
+            sys.stderr = codecs.getwriter('utf-8')(sys.stderr.buffer, 'strict')
         
         # Find the installed package
         result = subprocess.run(
@@ -118,9 +125,9 @@ jobs:
         )
         
         if proc.returncode == 0:
-            print("✅ Hook executed successfully")
+            print("[PASS] Hook executed successfully")
         else:
-            print(f"❌ Hook failed with code {proc.returncode}")
+            print(f"[FAIL] Hook failed with code {proc.returncode}")
             if proc.stderr:
                 print(f"Error: {proc.stderr}")
             sys.exit(1)
@@ -129,6 +136,7 @@ jobs:
         python test_hook.py
 
     - name: Check Claude Code compatibility
+      shell: bash
       run: |
         # Create a test settings file
         cat > test_settings.json << 'EOF'
@@ -142,7 +150,7 @@ jobs:
         
         # Verify the JSON is valid
         python -c "import json; json.load(open('test_settings.json'))"
-        echo "✅ Settings file structure is valid"
+        echo "[PASS] Settings file structure is valid"
 
     - name: Generate installation report
       if: always()

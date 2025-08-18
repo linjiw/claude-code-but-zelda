@@ -7,7 +7,15 @@ Simulates actual user interactions with the system
 import json
 import subprocess
 import sys
+import os
+import platform
 from pathlib import Path
+
+# Force UTF-8 encoding for Windows
+if platform.system() == 'Windows':
+    import codecs
+    sys.stdout = codecs.getwriter('utf-8')(sys.stdout.buffer, 'strict')
+    sys.stderr = codecs.getwriter('utf-8')(sys.stderr.buffer, 'strict')
 
 def run_command(cmd):
     """Run a shell command and return output"""
@@ -35,74 +43,78 @@ def test_zelda_command(command):
     return None
 
 def main():
-    print("🎮 Zelda Claude Code - End-to-End Integration Test")
+    # Use ASCII for CI environments
+    if os.environ.get('CI'):
+        print("[GAME] Zelda Claude Code - End-to-End Integration Test")
+    else:
+        print("🎮 Zelda Claude Code - End-to-End Integration Test")
     print("="*60)
     
     tests_passed = 0
     tests_failed = 0
     
     # Test 1: Help command
-    print("\n1️⃣  Testing @zelda help...")
+    print("\n[1] Testing @zelda help...")
     response = test_zelda_command("@zelda help")
     if response and "Available Commands" in response:
-        print("   ✅ Help command works")
+        print("   [PASS] Help command works")
         tests_passed += 1
     else:
-        print("   ❌ Help command failed")
+        print("   [FAIL] Help command failed")
         tests_failed += 1
     
     # Test 2: Stats command
-    print("\n2️⃣  Testing @zelda stats...")
+    print("\n[2] Testing @zelda stats...")
     response = test_zelda_command("@zelda stats")
     if response and "Coding Statistics" in response:
-        print("   ✅ Stats command works")
+        print("   [PASS] Stats command works")
         tests_passed += 1
     else:
-        print("   ❌ Stats command failed")
+        print("   [FAIL] Stats command failed")
         tests_failed += 1
     
     # Test 3: Achievements command
-    print("\n3️⃣  Testing @zelda achievements...")
+    print("\n[3] Testing @zelda achievements...")
     response = test_zelda_command("@zelda achievements")
     if response and "Achievements" in response:
-        print("   ✅ Achievements command works")
+        print("   [PASS] Achievements command works")
         tests_passed += 1
     else:
-        print("   ❌ Achievements command failed")
+        print("   [FAIL] Achievements command failed")
         tests_failed += 1
     
     # Test 4: Combo command
-    print("\n4️⃣  Testing @zelda combo...")
+    print("\n[4] Testing @zelda combo...")
     response = test_zelda_command("@zelda combo")
     if response and "Combo" in response:
-        print("   ✅ Combo command works")
+        print("   [PASS] Combo command works")
         tests_passed += 1
     else:
-        print("   ❌ Combo command failed")
+        print("   [FAIL] Combo command failed")
         tests_failed += 1
     
     # Test 5: Config command
-    print("\n5️⃣  Testing @zelda config...")
+    print("\n[5] Testing @zelda config...")
     response = test_zelda_command("@zelda config")
     if response and "Configuration" in response:
-        print("   ✅ Config view works")
+        print("   [PASS] Config view works")
         tests_passed += 1
     else:
-        print("   ❌ Config view failed")
+        print("   [FAIL] Config view failed")
         tests_failed += 1
     
     # Test 6: Config update
-    print("\n6️⃣  Testing @zelda config volume 75...")
+    print("\n[6] Testing @zelda config volume 75...")
     response = test_zelda_command("@zelda config volume 75")
     if response and ("updated" in response.lower() or "set" in response.lower()):
-        print("   ✅ Config update works")
+        print("   [PASS] Config update works")
         tests_passed += 1
     else:
-        print("   ❌ Config update failed")
+        print("   [FAIL] Config update failed")
         tests_failed += 1
     
     # Test 7: Tool execution hook
-    print("\n7️⃣  Testing PostToolUse hook...")
+    print("\n[7] Testing PostToolUse hook...")
     input_data = json.dumps({
         "hook_event_name": "PostToolUse",
         "tool_name": "Bash",
@@ -117,14 +129,14 @@ def main():
     )
     
     if result.returncode == 0:
-        print("   ✅ PostToolUse hook works")
+        print("   [PASS] PostToolUse hook works")
         tests_passed += 1
     else:
-        print("   ❌ PostToolUse hook failed")
+        print("   [FAIL] PostToolUse hook failed")
         tests_failed += 1
     
     # Test 8: Session start hook
-    print("\n8️⃣  Testing SessionStart hook...")
+    print("\n[8] Testing SessionStart hook...")
     input_data = json.dumps({
         "hook_event_name": "SessionStart"
     })
@@ -137,32 +149,32 @@ def main():
     )
     
     if result.returncode == 0:
-        print("   ✅ SessionStart hook works")
+        print("   [PASS] SessionStart hook works")
         tests_passed += 1
     else:
-        print("   ❌ SessionStart hook failed")
+        print("   [FAIL] SessionStart hook failed")
         tests_failed += 1
     
     # Test 9: Sound files exist
-    print("\n9️⃣  Testing sound files...")
+    print("\n[9] Testing sound files...")
     sound_dir = Path("sounds")
     essential_sounds = ["success.wav", "error.wav", "todo_complete.wav", "achievement.wav"]
     all_exist = all((sound_dir / s).exists() for s in essential_sounds)
     
     if all_exist:
-        print("   ✅ Essential sound files exist")
+        print("   [PASS] Essential sound files exist")
         tests_passed += 1
     else:
-        print("   ❌ Some sound files missing")
+        print("   [FAIL] Some sound files missing")
         tests_failed += 1
     
     # Test 10: Demo script
-    print("\n🔟  Testing demo script...")
+    print("\n[10] Testing demo script...")
     if Path("demo_sounds.sh").exists():
-        print("   ✅ Demo script exists")
+        print("   [PASS] Demo script exists")
         tests_passed += 1
     else:
-        print("   ❌ Demo script missing")
+        print("   [FAIL] Demo script missing")
         tests_failed += 1
     
     # Summary
@@ -170,17 +182,24 @@ def main():
     print(f"INTEGRATION TEST RESULTS: {tests_passed}/{tests_passed + tests_failed} passed")
     
     if tests_failed == 0:
-        print("🎉 ALL INTEGRATION TESTS PASSED!")
+        if os.environ.get('CI'):
+            print("[SUCCESS] ALL INTEGRATION TESTS PASSED!")
+        else:
+            print("🎉 ALL INTEGRATION TESTS PASSED!")
         print("\nThe Zelda Claude Code system is fully functional!")
         print("Users can now:")
-        print("  • Use @zelda commands in Claude Code")
-        print("  • Get sound feedback for their actions")
-        print("  • Track statistics and achievements")
-        print("  • Build combo streaks")
-        print("\nMay the Triforce guide your code! 🗡️✨")
+        print("  - Use @zelda commands in Claude Code")
+        print("  - Get sound feedback for their actions")
+        print("  - Track statistics and achievements")
+        print("  - Build combo streaks")
+        if not os.environ.get('CI'):
+            print("\nMay the Triforce guide your code! 🗡️✨")
         return 0
     else:
-        print(f"⚠️  {tests_failed} integration tests failed")
+        if os.environ.get('CI'):
+            print(f"[WARNING] {tests_failed} integration tests failed")
+        else:
+            print(f"⚠️  {tests_failed} integration tests failed")
         print("Please review the failures above.")
         return 1
 
