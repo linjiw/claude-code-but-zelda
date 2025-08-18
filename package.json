@@ -1,6 +1,6 @@
 {
   "name": "zelda-claude-code",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "Transform your Claude Code experience into an epic Zelda adventure with sounds, achievements, and combos!",
   "main": "lib/index.js",
   "bin": {
