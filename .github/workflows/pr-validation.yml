@@ -31,6 +31,9 @@ jobs:
         "
 
     - name: Validate hook doesn't crash
+      env:
+        CI: true
+        GITHUB_ACTIONS: true
       run: |
         # Quick smoke test - ensure hook handles basic events without crashing
         echo '{"hook_event_name": "SessionStart", "session_id": "pr-test"}' | python hooks/zelda_hook.py
@@ -38,6 +41,9 @@ jobs:
       shell: bash
 
     - name: Run platform-specific test
+      env:
+        CI: true
+        GITHUB_ACTIONS: true
       run: python test_cross_platform_hook.py
 
     - name: Comment on PR
