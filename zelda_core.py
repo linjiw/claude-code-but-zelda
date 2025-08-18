@@ -7,6 +7,7 @@ This single module contains all functionality for stats, combos, achievements, a
 import json
 import os
 import subprocess
+import tempfile
 from pathlib import Path
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Tuple
@@ -367,9 +368,15 @@ class ZeldaManager:
     
     def _log_achievement(self, name: str, icon: str):
         """Log achievement unlock for display"""
-        log_file = Path("/tmp/zelda_notifications.log")
-        with open(log_file, "a") as f:
-            f.write(f"ACHIEVEMENT:{icon} {name}\n")
+        # Use cross-platform temp directory
+        temp_dir = Path(tempfile.gettempdir())
+        log_file = temp_dir / "zelda_notifications.log"
+        try:
+            with open(log_file, "a") as f:
+                f.write(f"ACHIEVEMENT:{icon} {name}\n")
+        except Exception:
+            # Silently fail if can't write to temp
+            pass
     
     # Command Processing
     def process_command(self, command: str) -> str:

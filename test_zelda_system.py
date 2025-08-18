@@ -397,7 +397,9 @@ def test_installation():
     def test_installer():
         installer = Path("install.sh")
         assert installer.exists(), "Installer doesn't exist"
-        assert installer.stat().st_mode & 0o111, "Installer not executable"
+        # On Windows, shell scripts aren't executable in the same way
+        if os.name != 'nt':  # Not Windows
+            assert installer.stat().st_mode & 0o111, "Installer not executable"
     runner.test("Installer exists", test_installer)
     
     # Test 2: README exists
@@ -405,7 +407,11 @@ def test_installation():
         readme = Path("README.md")
         assert readme.exists(), "README doesn't exist"
         
-        content = readme.read_text()
+        # Handle encoding issues on Windows
+        try:
+            content = readme.read_text(encoding='utf-8')
+        except UnicodeDecodeError:
+            content = readme.read_text(encoding='utf-8', errors='ignore')
         assert "@zelda" in content, "README missing @zelda commands"
         assert "Installation" in content or "install" in content.lower()
     runner.test("README documentation", test_readme)

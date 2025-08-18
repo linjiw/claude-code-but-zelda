@@ -10,6 +10,7 @@ import sys
 import subprocess
 import time
 import platform
+import tempfile
 from pathlib import Path
 
 # Add parent directory to path for imports
@@ -253,10 +254,14 @@ def handle_session_start(session_id):
     play_sound_async("session_start.wav")
     
     # Check for notifications
-    notifications_file = Path("/tmp/zelda_notifications.log")
+    temp_dir = Path(tempfile.gettempdir())
+    notifications_file = temp_dir / "zelda_notifications.log"
     if notifications_file.exists():
         # Clear old notifications
-        notifications_file.unlink()
+        try:
+            notifications_file.unlink()
+        except Exception:
+            pass
 
 def handle_session_end():
     """Handle session end"""
@@ -302,7 +307,8 @@ def main():
         play_sound_async(HOOK_EVENT_SOUNDS[hook_event])
     
     # Check for notifications to display
-    notifications_file = Path("/tmp/zelda_notifications.log")
+    temp_dir = Path(tempfile.gettempdir())
+    notifications_file = temp_dir / "zelda_notifications.log"
     if notifications_file.exists():
         try:
             with open(notifications_file, 'r') as f:
