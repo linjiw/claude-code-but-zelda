@@ -112,26 +112,48 @@ def play_sound_async(sound_file):
                     except FileNotFoundError:
                         continue  # Try next player
             elif system == 'Windows':
-                # Windows PowerShell command
-                ps_command = f'''
-                Start-Job -ScriptBlock {{
-                    Add-Type -TypeDefinition @"
-                    using System.Media;
-                    public class Sound {{
-                        public static void Play(string file) {{
-                            var player = new SoundPlayer(file);
-                            player.Play();
-                        }}
-                    }}
-"@
-                    [Sound]::Play("{str(sound_path)}")
-                }}
-                '''
-                subprocess.Popen(
-                    ['powershell', '-Command', ps_command],
-                    stdout=subprocess.DEVNULL,
-                    stderr=subprocess.DEVNULL
-                )
+                # Windows sound playback with multiple fallback methods
+                sound_played = False
+                
+                # Method 1: Try using winsound module (built-in on Windows)
+                try:
+                    import winsound
+                    # Use SND_ASYNC to play asynchronously
+                    winsound.PlaySound(str(sound_path), winsound.SND_FILENAME | winsound.SND_ASYNC)
+                    sound_played = True
+                except (ImportError, Exception):
+                    pass
+                
+                # Method 2: Try PowerShell with different executables
+                if not sound_played:
+                    powershell_cmds = ['powershell.exe', 'pwsh.exe', 'powershell', 'pwsh']
+                    for ps_exe in powershell_cmds:
+                        try:
+                            # Simpler PowerShell command that's more likely to work
+                            ps_command = f'(New-Object Media.SoundPlayer "{str(sound_path)}").PlaySync()'
+                            subprocess.Popen(
+                                [ps_exe, '-WindowStyle', 'Hidden', '-Command', ps_command],
+                                stdout=subprocess.DEVNULL,
+                                stderr=subprocess.DEVNULL,
+                                creationflags=subprocess.CREATE_NO_WINDOW if hasattr(subprocess, 'CREATE_NO_WINDOW') else 0
+                            )
+                            sound_played = True
+                            break
+                        except (FileNotFoundError, OSError):
+                            continue
+                
+                # Method 3: Try Windows Media Player as last resort
+                if not sound_played:
+                    try:
+                        # Use start command to play with default audio player
+                        subprocess.Popen(
+                            ['cmd', '/c', 'start', '/min', '', str(sound_path)],
+                            stdout=subprocess.DEVNULL,
+                            stderr=subprocess.DEVNULL,
+                            shell=False
+                        )
+                    except Exception:
+                        pass
         except Exception:
             # Silently fail - don't interrupt workflow
             pass
