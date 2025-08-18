@@ -37,6 +37,7 @@
             <div class="nav-links">
                 <a href="#demo" class="nav-link">Demo</a>
                 <a href="#features" class="nav-link">Features</a>
+                <a href="#platforms" class="nav-link">Platforms</a>
                 <a href="#install" class="nav-link">Install</a>
                 <a href="https://github.com/linjiw/claude-code-but-zelda" class="nav-link" target="_blank">GitHub</a>
             </div>
@@ -54,9 +55,11 @@
                 Transform your coding experience into an epic adventure with sounds, achievements, and real-time stats!
             </p>
             <div class="hero-badges">
+                <img src="https://github.com/linjiw/claude-code-but-zelda/actions/workflows/cross-platform-test.yml/badge.svg" alt="Cross-Platform Tests">
                 <img src="https://badge.fury.io/js/zelda-claude-code.svg" alt="npm version">
                 <img src="https://img.shields.io/badge/sounds-25%2B-orange" alt="25+ Sounds">
                 <img src="https://img.shields.io/badge/achievements-11%2B-yellow" alt="11+ Achievements">
+                <img src="https://img.shields.io/badge/platforms-macOS%20%7C%20Linux%20%7C%20Windows-brightgreen" alt="Cross-Platform">
             </div>
             <div class="hero-actions">
                 <button class="btn btn-primary" onclick="scrollToSection('install')">
@@ -297,6 +300,69 @@
                     <div class="feature-icon">🎮</div>
                     <h3 class="feature-title">Seamless Integration</h3>
                     <p class="feature-desc">Works directly inside Claude Code - no external tools needed</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Platform Compatibility Section -->
+    <section id="platforms" class="platforms-section">
+        <div class="container">
+            <h2 class="section-title">
+                <span class="pixel-text">Universal</span> Platform Support
+            </h2>
+            <p class="section-subtitle">
+                Fully tested and optimized for all major operating systems with automated CI/CD
+            </p>
+            
+            <div class="platform-grid">
+                <div class="platform-card">
+                    <div class="platform-icon">🍎</div>
+                    <h3 class="platform-title">macOS</h3>
+                    <div class="platform-details">
+                        <div class="platform-item">✅ Native afplay support</div>
+                        <div class="platform-item">✅ Tested on macOS 12+</div>
+                        <div class="platform-item">✅ M1/M2/M3 compatible</div>
+                    </div>
+                </div>
+                
+                <div class="platform-card">
+                    <div class="platform-icon">🐧</div>
+                    <h3 class="platform-title">Linux</h3>
+                    <div class="platform-details">
+                        <div class="platform-item">✅ Multiple audio players</div>
+                        <div class="platform-item">✅ Ubuntu, Debian, Arch</div>
+                        <div class="platform-item">✅ WSL2 supported</div>
+                    </div>
+                </div>
+                
+                <div class="platform-card">
+                    <div class="platform-icon">🪟</div>
+                    <h3 class="platform-title">Windows</h3>
+                    <div class="platform-details">
+                        <div class="platform-item">✅ PowerShell integration</div>
+                        <div class="platform-item">✅ Windows 10/11</div>
+                        <div class="platform-item">✅ No dependencies</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="ci-status">
+                <h3 class="ci-title">🔄 Continuous Integration Status</h3>
+                <div class="ci-badges">
+                    <a href="https://github.com/linjiw/claude-code-but-zelda/actions" target="_blank">
+                        <img src="https://github.com/linjiw/claude-code-but-zelda/actions/workflows/cross-platform-test.yml/badge.svg" alt="Cross-Platform Tests">
+                    </a>
+                    <span class="ci-text">Automated testing on every commit across all platforms</span>
+                </div>
+                <div class="test-matrix">
+                    <h4>Test Matrix</h4>
+                    <div class="matrix-grid">
+                        <div class="matrix-item">Python 3.8-3.12</div>
+                        <div class="matrix-item">Ubuntu Latest</div>
+                        <div class="matrix-item">macOS Latest</div>
+                        <div class="matrix-item">Windows Latest</div>
+                    </div>
                 </div>
             </div>
         </div>
