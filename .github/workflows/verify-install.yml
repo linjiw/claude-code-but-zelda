@@ -88,10 +88,12 @@ jobs:
             sys.stderr = codecs.getwriter('utf-8')(sys.stderr.buffer, 'strict')
         
         # Find the installed package
+        npm_cmd = "npm.cmd" if sys.platform == "win32" else "npm"
         result = subprocess.run(
-            ["npm", "list", "-g", "zelda-claude-code", "--json"],
+            [npm_cmd, "list", "-g", "zelda-claude-code", "--json"],
             capture_output=True,
-            text=True
+            text=True,
+            shell=(sys.platform == "win32")
         )
         
         if result.returncode != 0:
@@ -102,9 +104,10 @@ jobs:
         
         # Get the installation path
         npm_prefix = subprocess.run(
-            ["npm", "prefix", "-g"],
+            [npm_cmd, "prefix", "-g"],
             capture_output=True,
-            text=True
+            text=True,
+            shell=(sys.platform == "win32")
         ).stdout.strip()
         
         if sys.platform == "win32":
