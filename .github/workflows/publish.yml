@@ -1,0 +1,173 @@
+name: Publish to NPM
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version_bump:
+        description: 'Version bump type (patch, minor, major)'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+      dry_run:
+        description: 'Dry run (no actual publish)'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  pre-publish-tests:
+    name: Pre-publish Tests
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        registry-url: 'https://registry.npmjs.org'
+
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Run tests
+      run: |
+        python test_suite.py
+        python test_cross_platform_hook.py
+      env:
+        CI: true
+
+    - name: Check package validity
+      run: |
+        npm pack --dry-run
+        echo "Package contents:"
+        npm pack --dry-run 2>&1 | grep -E "^npm notice"
+
+  publish:
+    name: Publish to NPM
+    needs: pre-publish-tests
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        registry-url: 'https://registry.npmjs.org'
+
+    - name: Configure Git
+      run: |
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "actions@github.com"
+
+    - name: Get current version
+      id: current_version
+      run: |
+        CURRENT_VERSION=$(node -p "require('./package.json').version")
+        echo "version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+        echo "Current version: $CURRENT_VERSION"
+
+    - name: Bump version (if workflow_dispatch)
+      if: github.event_name == 'workflow_dispatch'
+      id: bump_version
+      run: |
+        npm version ${{ github.event.inputs.version_bump }} --no-git-tag-version
+        NEW_VERSION=$(node -p "require('./package.json').version")
+        echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+        echo "Bumped version to: $NEW_VERSION"
+
+    - name: Use release version (if release)
+      if: github.event_name == 'release'
+      id: release_version
+      run: |
+        RELEASE_VERSION=${{ github.event.release.tag_name }}
+        # Remove 'v' prefix if present
+        RELEASE_VERSION=${RELEASE_VERSION#v}
+        npm version $RELEASE_VERSION --no-git-tag-version --allow-same-version
+        echo "new_version=$RELEASE_VERSION" >> $GITHUB_OUTPUT
+        echo "Using release version: $RELEASE_VERSION"
+
+    - name: Set final version
+      id: final_version
+      run: |
+        if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+          VERSION="${{ steps.bump_version.outputs.new_version }}"
+        else
+          VERSION="${{ steps.release_version.outputs.new_version }}"
+        fi
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "Final version: $VERSION"
+
+    - name: Commit version bump
+      if: github.event.inputs.dry_run != 'true'
+      run: |
+        git add package.json package-lock.json
+        git commit -m "chore: bump version to ${{ steps.final_version.outputs.version }}" || echo "No changes to commit"
+        git push origin main || echo "No changes to push"
+
+    - name: Publish to NPM (Dry Run)
+      if: github.event.inputs.dry_run == 'true'
+      run: |
+        echo "🔍 DRY RUN MODE - Not actually publishing"
+        npm publish --dry-run
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+    - name: Publish to NPM
+      if: github.event.inputs.dry_run != 'true'
+      run: |
+        npm publish
+        echo "✅ Published version ${{ steps.final_version.outputs.version }} to NPM"
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+    - name: Create GitHub Release (if workflow_dispatch)
+      if: github.event_name == 'workflow_dispatch' && github.event.inputs.dry_run != 'true'
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: v${{ steps.final_version.outputs.version }}
+        name: Release v${{ steps.final_version.outputs.version }}
+        body: |
+          ## 🎮 Zelda Claude Code v${{ steps.final_version.outputs.version }}
+          
+          ### Installation
+          ```bash
+          npm install -g zelda-claude-code@${{ steps.final_version.outputs.version }}
+          ```
+          
+          ### Changes
+          See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for details.
+        draft: false
+        prerelease: false
+
+    - name: Post-publish summary
+      run: |
+        echo "## 📦 Publish Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "- **Version**: ${{ steps.final_version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **Registry**: NPM (npmjs.org)" >> $GITHUB_STEP_SUMMARY
+        echo "- **Package**: zelda-claude-code" >> $GITHUB_STEP_SUMMARY
+        echo "- **Dry Run**: ${{ github.event.inputs.dry_run || 'false' }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### Next Steps" >> $GITHUB_STEP_SUMMARY
+        echo "1. Verify package at: https://www.npmjs.com/package/zelda-claude-code" >> $GITHUB_STEP_SUMMARY
+        echo "2. Test installation: \`npm install -g zelda-claude-code@${{ steps.final_version.outputs.version }}\`" >> $GITHUB_STEP_SUMMARY
