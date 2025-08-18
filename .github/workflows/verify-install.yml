@@ -55,13 +55,20 @@ jobs:
         npm list -g zelda-claude-code --depth=0
 
     - name: Verify installation
+      shell: bash
       run: |
         # Check if the command is available
-        which zelda-claude || where zelda-claude || echo "Command not in PATH"
-        
-        # Try running the command
-        zelda-claude --version || true
-        zelda-claude --help || true
+        if command -v zelda-claude &> /dev/null || where zelda-claude 2> /dev/null; then
+            echo "Command found in PATH"
+            # Try running the command
+            zelda-claude --version || true
+            zelda-claude --help || true
+        else
+            echo "Command not found in PATH, checking npm global bin"
+            # Try to run via npx as fallback
+            npx -p zelda-claude-code zelda-claude --version || true
+            npx -p zelda-claude-code zelda-claude --help || true
+        fi
 
     - name: Test hook execution
       shell: bash

@@ -14,7 +14,9 @@ const version = require('../package.json').version;
 function runPythonScript(scriptPath, args = '') {
     try {
         const fullPath = path.join(packageDir, scriptPath);
-        const result = execSync(`python3 "${fullPath}" ${args}`, { 
+        // Use 'python' on Windows, 'python3' on Unix
+        const pythonCmd = process.platform === 'win32' ? 'python' : 'python3';
+        const result = execSync(`${pythonCmd} "${fullPath}" ${args}`, { 
             stdio: 'inherit',
             cwd: packageDir 
         });
@@ -29,11 +31,22 @@ function runPythonScript(scriptPath, args = '') {
 function runShellScript(scriptPath) {
     try {
         const fullPath = path.join(packageDir, scriptPath);
-        execSync(`bash "${fullPath}"`, { 
-            stdio: 'inherit',
-            cwd: packageDir 
-        });
-        return true;
+        if (process.platform === 'win32') {
+            // On Windows, try to run the Python equivalent if it exists
+            const pythonScript = scriptPath.replace('.sh', '.py');
+            const pythonPath = path.join(packageDir, pythonScript);
+            if (fs.existsSync(pythonPath)) {
+                return runPythonScript(pythonScript);
+            }
+            console.error(chalk.red(`Shell scripts not supported on Windows: ${scriptPath}`));
+            return false;
+        } else {
+            execSync(`bash "${fullPath}"`, { 
+                stdio: 'inherit',
+                cwd: packageDir 
+            });
+            return true;
+        }
     } catch (error) {
         console.error(chalk.red(`Error running ${scriptPath}: ${error.message}`));
         return false;
@@ -54,13 +67,11 @@ program
         const spinner = ora('Running installation...').start();
         
         // Run the install script
-        const installScript = path.join(packageDir, 'install.sh');
-        if (fs.existsSync(installScript)) {
+        if (process.platform === 'win32') {
+            // On Windows, use the Node.js postinstall script
+            spinner.text = 'Running Windows installation...';
             try {
-                execSync(`bash "${installScript}"`, { 
-                    stdio: 'inherit',
-                    cwd: packageDir 
-                });
+                require('../postinstall.js');
                 spinner.succeed('Installation complete!');
                 console.log(chalk.green('\n✅ Zelda Claude Code installed successfully!'));
                 console.log(chalk.yellow('⚠️  Remember to restart Claude Code'));
@@ -69,8 +80,24 @@ program
                 console.error(chalk.red(error.message));
             }
         } else {
-            // Fallback to Node.js installation
-            require('../postinstall.js');
+            const installScript = path.join(packageDir, 'install.sh');
+            if (fs.existsSync(installScript)) {
+                try {
+                    execSync(`bash "${installScript}"`, { 
+                        stdio: 'inherit',
+                        cwd: packageDir 
+                    });
+                    spinner.succeed('Installation complete!');
+                    console.log(chalk.green('\n✅ Zelda Claude Code installed successfully!'));
+                    console.log(chalk.yellow('⚠️  Remember to restart Claude Code'));
+                } catch (error) {
+                    spinner.fail('Installation failed');
+                    console.error(chalk.red(error.message));
+                }
+            } else {
+                // Fallback to Node.js installation
+                require('../postinstall.js');
+            }
         }
     });
 
@@ -80,7 +107,22 @@ program
     .description('Play all Zelda sounds in sequence')
     .action(() => {
         console.log(chalk.cyan('\n🎵 Playing Zelda sound demo...\n'));
-        runShellScript('demo_sounds.sh');
+        if (process.platform === 'win32') {
+            // On Windows, run the Python demo script
+            const demoScript = 'demo_sounds.py';
+            if (fs.existsSync(path.join(packageDir, demoScript))) {
+                runPythonScript(demoScript);
+            } else {
+                // Fallback: play sounds individually
+                const sounds = ['success', 'error', 'warning', 'achievement', 'todo_complete'];
+                sounds.forEach(sound => {
+                    console.log(chalk.yellow(`Playing ${sound}...`));
+                    runPythonScript('scripts/play_sound.py', sound);
+                });
+            }
+        } else {
+            runShellScript('demo_sounds.sh');
+        }
     });
 
 // Test command
@@ -115,7 +157,8 @@ program
     .command('stats')
     .description('View your Zelda coding statistics')
     .action(() => {
-        const statsFile = path.join(process.env.HOME, '.zelda', 'stats.json');
+        const homeDir = process.env.HOME || process.env.USERPROFILE;
+        const statsFile = path.join(homeDir, '.zelda', 'stats.json');
         if (fs.existsSync(statsFile)) {
             try {
                 const stats = JSON.parse(fs.readFileSync(statsFile, 'utf8'));
@@ -141,7 +184,8 @@ program
     .command('config [key] [value]')
     .description('View or update configuration')
     .action((key, value) => {
-        const configFile = path.join(process.env.HOME, '.zelda', 'config.json');
+        const homeDir = process.env.HOME || process.env.USERPROFILE;
+        const configFile = path.join(homeDir, '.zelda', 'config.json');
         let config = {};
         
         if (fs.existsSync(configFile)) {
@@ -189,7 +233,8 @@ program
     .action(() => {
         console.log(chalk.cyan('\n🗑️  Uninstalling Zelda Claude Code...\n'));
         
-        const settingsFile = path.join(process.env.HOME, '.claude', 'settings.json');
+        const homeDir = process.env.HOME || process.env.USERPROFILE;
+        const settingsFile = path.join(homeDir, '.claude', 'settings.json');
         if (fs.existsSync(settingsFile)) {
             try {
                 const settings = JSON.parse(fs.readFileSync(settingsFile, 'utf8'));
