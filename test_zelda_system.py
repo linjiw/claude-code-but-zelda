@@ -9,8 +9,15 @@ import sys
 import subprocess
 import tempfile
 import shutil
+import platform
 from pathlib import Path
 from datetime import datetime
+
+# Force UTF-8 encoding for Windows
+if platform.system() == 'Windows':
+    import codecs
+    sys.stdout = codecs.getwriter('utf-8')(sys.stdout.buffer, 'strict')
+    sys.stderr = codecs.getwriter('utf-8')(sys.stderr.buffer, 'strict')
 
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -28,17 +35,26 @@ class TestRunner:
             func()
             self.passed += 1
             self.tests.append((name, "✅ PASSED"))
-            print(f"✅ {name}")
+            if os.environ.get('CI'):
+                print(f"[PASS] {name}")
+            else:
+                print(f"✅ {name}")
             return True
         except AssertionError as e:
             self.failed += 1
             self.tests.append((name, f"❌ FAILED: {e}"))
-            print(f"❌ {name}: {e}")
+            if os.environ.get('CI'):
+                print(f"[FAIL] {name}: {e}")
+            else:
+                print(f"❌ {name}: {e}")
             return False
         except Exception as e:
             self.failed += 1
             self.tests.append((name, f"❌ ERROR: {e}"))
-            print(f"❌ {name}: Unexpected error: {e}")
+            if os.environ.get('CI'):
+                print(f"[FAIL] {name}: Unexpected error: {e}")
+            else:
+                print(f"❌ {name}: Unexpected error: {e}")
             return False
     
     def summary(self):
@@ -47,9 +63,15 @@ class TestRunner:
         print("\n" + "="*60)
         print(f"TEST RESULTS: {self.passed}/{total} passed")
         if self.failed == 0:
-            print("🎉 All tests passed!")
+            if os.environ.get('CI'):
+                print("[SUCCESS] All tests passed!")
+            else:
+                print("🎉 All tests passed!")
         else:
-            print(f"⚠️  {self.failed} tests failed")
+            if os.environ.get('CI'):
+                print(f"[WARNING] {self.failed} tests failed")
+            else:
+                print(f"⚠️  {self.failed} tests failed")
         print("="*60)
         return self.failed == 0
 
@@ -398,18 +420,27 @@ def test_installation():
 
 def main():
     """Run all tests"""
-    print("🧪 Zelda Claude Code Test Suite")
+    if os.environ.get('CI'):
+        print("[TEST] Zelda Claude Code Test Suite")
+    else:
+        print("🧪 Zelda Claude Code Test Suite")
     print("="*60)
     
     all_passed = True
     
     # Run core module tests
-    print("\n📦 Testing Core Module...")
+    if os.environ.get('CI'):
+        print("\n[MODULE] Testing Core Module...")
+    else:
+        print("\n📦 Testing Core Module...")
     runner = test_zelda_core_module()
     all_passed = runner.summary() and all_passed
     
     # Run hook integration tests
-    print("\n🔗 Testing Hook Integration...")
+    if os.environ.get('CI'):
+        print("\n[HOOK] Testing Hook Integration...")
+    else:
+        print("\n🔗 Testing Hook Integration...")
     runner = test_hook_integration()
     all_passed = runner.summary() and all_passed
     
@@ -426,10 +457,16 @@ def main():
     # Final summary
     print("\n" + "="*60)
     if all_passed:
-        print("🎉 ALL TEST SUITES PASSED! 🎉")
+        if os.environ.get('CI'):
+            print("[SUCCESS] ALL TEST SUITES PASSED!")
+        else:
+            print("🎉 ALL TEST SUITES PASSED! 🎉")
         print("The Zelda Claude Code system is working correctly!")
     else:
-        print("⚠️  Some tests failed. Please review the output above.")
+        if os.environ.get('CI'):
+            print("[WARNING] Some tests failed. Please review the output above.")
+        else:
+            print("⚠️  Some tests failed. Please review the output above.")
     print("="*60)
     
     return 0 if all_passed else 1
