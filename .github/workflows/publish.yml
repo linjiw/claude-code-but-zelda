@@ -120,7 +120,9 @@ jobs:
     - name: Commit version bump
       if: github.event.inputs.dry_run != 'true'
       run: |
-        git add package.json package-lock.json
+        git add package.json
+        # Add package-lock.json if it exists
+        git add package-lock.json 2>/dev/null || true
         git commit -m "chore: bump version to ${{ steps.final_version.outputs.version }}" || echo "No changes to commit"
         git push origin main || echo "No changes to push"
 
