@@ -2,6 +2,7 @@
 
 > Transform your coding experience into an epic Zelda adventure with sounds, achievements, combos, and real-time stats!
 
+[![Cross-Platform Tests](https://github.com/linjiw/claude-code-but-zelda/actions/workflows/cross-platform-test.yml/badge.svg)](https://github.com/linjiw/claude-code-but-zelda/actions/workflows/cross-platform-test.yml)
 [![npm version](https://badge.fury.io/js/zelda-claude-code.svg)](https://www.npmjs.com/package/zelda-claude-code)
 [![Version](https://img.shields.io/badge/version-3.0.0-brightgreen)](.)
 [![Integration](https://img.shields.io/badge/integration-Claude%20Code-blue)](.)

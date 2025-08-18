@@ -1,0 +1,53 @@
+name: PR Validation
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  validate:
+    name: Validate PR - ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ["3.10"]  # Test with single Python version for speed
+
+    steps:
+    - name: Checkout PR code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Quick platform check
+      run: |
+        python -c "
+        import platform
+        import sys
+        print(f'✅ Testing on {platform.system()} - Python {sys.version}')
+        "
+
+    - name: Validate hook doesn't crash
+      run: |
+        # Quick smoke test - ensure hook handles basic events without crashing
+        echo '{"hook_event_name": "SessionStart", "session_id": "pr-test"}' | python hooks/zelda_hook.py
+        echo '{"hook_event_name": "Stop"}' | python hooks/zelda_hook.py
+      shell: bash
+
+    - name: Run platform-specific test
+      run: python test_cross_platform_hook.py
+
+    - name: Comment on PR
+      if: failure()
+      uses: actions/github-script@v7
+      with:
+        script: |
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: '❌ Platform compatibility check failed on ${{ matrix.os }}. Please check the workflow logs.'
+          })

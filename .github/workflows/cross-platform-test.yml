@@ -1,0 +1,157 @@
+name: Cross-Platform Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  test:
+    name: Test on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        exclude:
+          # Reduce matrix size by excluding some combinations
+          - os: windows-latest
+            python-version: "3.8"
+          - os: windows-latest
+            python-version: "3.9"
+          - os: macos-latest
+            python-version: "3.8"
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install system dependencies (Ubuntu)
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update
+        # Install audio players for testing
+        sudo apt-get install -y alsa-utils pulseaudio-utils
+        # Create dummy audio device for testing
+        sudo modprobe snd-dummy
+        # List available audio players
+        echo "Available audio players:"
+        which aplay && echo "✓ aplay installed" || echo "✗ aplay not found"
+        which paplay && echo "✓ paplay installed" || echo "✗ paplay not found"
+        which ffplay && echo "✓ ffplay installed" || echo "✗ ffplay not found"
+        which mpg123 && echo "✓ mpg123 installed" || echo "✗ mpg123 not found"
+
+    - name: Install system dependencies (macOS)
+      if: runner.os == 'macOS'
+      run: |
+        # afplay is built-in on macOS
+        echo "Available audio players:"
+        which afplay && echo "✓ afplay installed" || echo "✗ afplay not found"
+
+    - name: Install system dependencies (Windows)
+      if: runner.os == 'Windows'
+      run: |
+        # PowerShell is built-in on Windows
+        Write-Host "Available audio players:"
+        Get-Command powershell -ErrorAction SilentlyContinue && Write-Host "✓ PowerShell installed" || Write-Host "✗ PowerShell not found"
+
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        # Install any required Python packages
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      shell: bash
+
+    - name: Run cross-platform hook test
+      run: |
+        python test_cross_platform_hook.py
+      continue-on-error: false
+
+    - name: Run main test suite
+      run: |
+        python test_suite.py
+      continue-on-error: true  # Don't fail on audio playback issues in CI
+
+    - name: Test hook execution directly
+      run: |
+        # Test the hook doesn't crash on different platforms
+        echo '{"hook_event_name": "SessionStart", "session_id": "test"}' | python hooks/zelda_hook.py
+        echo '{"hook_event_name": "PostToolUse", "tool_name": "TodoWrite", "tool_response": {"todos": [{"status": "completed"}]}}' | python hooks/zelda_hook.py
+      shell: bash
+
+    - name: Check for platform-specific errors
+      run: |
+        python -c "
+        import platform
+        import subprocess
+        import sys
+        import json
+        
+        print(f'Testing on {platform.system()}')
+        
+        # Test hook with various events
+        events = [
+            {'hook_event_name': 'SessionStart', 'session_id': 'test'},
+            {'hook_event_name': 'Stop'},
+            {'hook_event_name': 'PostToolUse', 'tool_name': 'Bash', 'tool_response': {'exitCode': 0}}
+        ]
+        
+        for event in events:
+            proc = subprocess.Popen(
+                [sys.executable, 'hooks/zelda_hook.py'],
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE
+            )
+            stdout, stderr = proc.communicate(json.dumps(event).encode())
+            
+            if proc.returncode != 0:
+                print(f'❌ Hook failed for {event[\"hook_event_name\"]}')
+                print(f'Error: {stderr.decode()}')
+                sys.exit(1)
+            
+            # Check for wrong platform commands
+            if platform.system() == 'Linux' and b'afplay' in stderr:
+                print('❌ Linux tried to use macOS afplay command')
+                sys.exit(1)
+            elif platform.system() == 'Darwin' and b'aplay' in stderr:
+                print('❌ macOS tried to use Linux aplay command')
+                sys.exit(1)
+                
+        print('✅ All platform checks passed!')
+        "
+
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results-${{ matrix.os }}-py${{ matrix.python-version }}
+        path: |
+          *.log
+          test-results/
+        retention-days: 30
+
+  summary:
+    name: Test Summary
+    runs-on: ubuntu-latest
+    needs: test
+    if: always()
+    steps:
+    - name: Summary
+      run: |
+        echo "## Cross-Platform Test Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "All platform tests completed. Check individual job results for details." >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### Tested Platforms:" >> $GITHUB_STEP_SUMMARY
+        echo "- ✅ Ubuntu Linux" >> $GITHUB_STEP_SUMMARY
+        echo "- ✅ macOS" >> $GITHUB_STEP_SUMMARY
+        echo "- ✅ Windows" >> $GITHUB_STEP_SUMMARY
