@@ -122,19 +122,20 @@ jobs:
             stdout, stderr = proc.communicate(json.dumps(event).encode())
             
             if proc.returncode != 0:
-                print(f'❌ Hook failed for {event[\"hook_event_name\"]}')
+                event_name = event.get('hook_event_name', 'unknown')
+                print(f'[FAIL] Hook failed for {event_name}')
                 print(f'Error: {stderr.decode()}')
                 sys.exit(1)
             
             # Check for wrong platform commands
             if platform.system() == 'Linux' and b'afplay' in stderr:
-                print('❌ Linux tried to use macOS afplay command')
+                print('[FAIL] Linux tried to use macOS afplay command')
                 sys.exit(1)
             elif platform.system() == 'Darwin' and b'aplay' in stderr:
-                print('❌ macOS tried to use Linux aplay command')
+                print('[FAIL] macOS tried to use Linux aplay command')
                 sys.exit(1)
                 
-        print('✅ All platform checks passed!')
+        print('[PASS] All platform checks passed!')
         "
 
     - name: Upload test results
