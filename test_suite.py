@@ -11,6 +11,7 @@ import os
 import sys
 import json
 import threading
+import platform
 from pathlib import Path
 from unittest.mock import patch, MagicMock
 
@@ -274,6 +275,45 @@ class TestErrorHandling(unittest.TestCase):
         # This would require actually changing permissions, 
         # which might not be safe in all environments
         pass  # Skip for safety
+    
+    def test_cross_platform_hook(self):
+        """Test that zelda_hook.py correctly handles different platforms"""
+        hook_path = Path(__file__).parent / 'hooks' / 'zelda_hook.py'
+        
+        # Test SessionStart event
+        test_data = json.dumps({
+            "hook_event_name": "SessionStart",
+            "session_id": "test-session"
+        })
+        
+        proc = subprocess.Popen(
+            ['python3', str(hook_path)],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE
+        )
+        
+        stdout, stderr = proc.communicate(test_data.encode())
+        
+        # Should not crash on any platform
+        self.assertEqual(proc.returncode, 0,
+                       f"Hook failed on {platform.system()}: {stderr.decode() if stderr else 'No error'}")
+        
+        # Check for platform-specific errors
+        if stderr:
+            # Should not have FileNotFoundError for audio players
+            self.assertNotIn(b"FileNotFoundError", stderr,
+                           f"Audio player not found on {platform.system()}")
+            
+            # On Linux, should not try to use afplay
+            if platform.system() == "Linux":
+                self.assertNotIn(b"afplay", stderr,
+                               "Hook tried to use afplay on Linux")
+            
+            # On macOS, should not try to use aplay
+            if platform.system() == "Darwin":
+                self.assertNotIn(b"aplay", stderr,
+                               "Hook tried to use aplay on macOS")
 
 
 class TestUserExperience(unittest.TestCase):

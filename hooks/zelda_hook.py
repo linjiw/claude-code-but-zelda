@@ -9,6 +9,7 @@ import json
 import sys
 import subprocess
 import time
+import platform
 from pathlib import Path
 
 # Add parent directory to path for imports
@@ -80,12 +81,60 @@ def play_sound_async(sound_file):
     
     if manager.config["sounds"]["enabled"]:
         volume = manager.config.get("volume", 100) / 100.0
-        # Note: afplay doesn't support volume, but we keep the structure for future
-        subprocess.Popen(
-            ["afplay", str(sound_path)],
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL
-        )
+        # Cross-platform audio playback
+        system = platform.system()
+        
+        try:
+            if system == 'Darwin':  # macOS
+                subprocess.Popen(
+                    ["afplay", str(sound_path)],
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL
+                )
+            elif system == 'Linux':
+                # Try multiple Linux audio players in order of preference
+                players = ['aplay', 'paplay', 'ffplay', 'mpg123']
+                for player in players:
+                    try:
+                        if player == 'ffplay':
+                            subprocess.Popen(
+                                [player, '-nodisp', '-autoexit', str(sound_path)],
+                                stdout=subprocess.DEVNULL,
+                                stderr=subprocess.DEVNULL
+                            )
+                        else:
+                            subprocess.Popen(
+                                [player, str(sound_path)],
+                                stdout=subprocess.DEVNULL,
+                                stderr=subprocess.DEVNULL
+                            )
+                        break  # Success, exit the loop
+                    except FileNotFoundError:
+                        continue  # Try next player
+            elif system == 'Windows':
+                # Windows PowerShell command
+                ps_command = f'''
+                Start-Job -ScriptBlock {{
+                    Add-Type -TypeDefinition @"
+                    using System.Media;
+                    public class Sound {{
+                        public static void Play(string file) {{
+                            var player = new SoundPlayer(file);
+                            player.Play();
+                        }}
+                    }}
+"@
+                    [Sound]::Play("{str(sound_path)}")
+                }}
+                '''
+                subprocess.Popen(
+                    ['powershell', '-Command', ps_command],
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL
+                )
+        except Exception:
+            # Silently fail - don't interrupt workflow
+            pass
 
 def play_multiple_sounds(sounds):
     """Play multiple sounds with slight delay"""
